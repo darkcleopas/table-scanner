@@ -5,6 +5,7 @@ from src.scan_img import scan_img
 from image_slicer import slice
 from src.utils import check_slice, find_movement
 import time
+import os
 
 video_name = "img-6.mp4"
 cap = cv2.VideoCapture(f"{video_name}")
@@ -12,6 +13,11 @@ cap = cv2.VideoCapture(f"{video_name}")
 
 object_detector = cv2.createBackgroundSubtractorMOG2()
 movements = []
+
+saved_img_path = f"{config.TEMP_DIR}/{config.TEMP_IMG}"
+if not os.path.exists(saved_img_path):
+    os.mkdir(saved_img_path)
+
 
 while True:
     ret, frame = cap.read()
@@ -24,7 +30,6 @@ while True:
 
         if scanned_img is not None:
             scanned_img = cv2.resize(scanned_img, (config.H, config.W))
-            saved_img_path = f"{config.TEMP_DIR}/{config.TEMP_IMG}"
             cv2.imwrite(saved_img_path, scanned_img)		
             slice(saved_img_path, 9)
 
